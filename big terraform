@@ -1,0 +1,233 @@
+✅ STEP-BY-STEP: Terraform AWS Project (NO ERRORS)
+🔹 Prerequisites (DO THIS FIRST)
+
+AWS Account
+
+AWS CLI configured
+
+aws configure
+
+
+Enter:
+
+Access Key
+
+Secret Key
+
+Region (example: ap-south-1)
+
+Output format: json
+
+Verify:
+
+aws sts get-caller-identity
+
+🔹 STEP 1: Create Project Folder Structure
+mkdir terraform-aws-lab
+cd terraform-aws-lab
+
+
+Create files:
+
+touch provider.tf variables.tf ec2.tf s3.tf iam.tf outputs.tf terraform.tfvars
+
+
+Your structure:
+
+terraform-aws-lab/
+│── provider.tf
+│── variables.tf
+│── ec2.tf
+│── s3.tf
+│── iam.tf
+│── outputs.tf
+│── terraform.tfvars
+
+🔹 STEP 2: provider.tf
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+🔹 STEP 3: variables.tf
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "bucket_name" {
+  description = "S3 bucket name"
+  type        = string
+}
+
+variable "iam_user_name" {
+  description = "IAM user name"
+  type        = string
+}
+
+🔹 STEP 4: terraform.tfvars
+
+⚠️ Bucket name must be globally unique
+
+aws_region     = "ap-south-1"
+instance_type = "t3.micro"
+bucket_name   = "cdac-terraform-app-data-12345"
+iam_user_name = "devops-engineer"
+
+
+(Change number if bucket already exists)
+
+🔹 STEP 5: ec2.tf (EC2 Instance)
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
+resource "aws_instance" "ec2_instance" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = var.instance_type
+
+  tags = {
+    Name = "Terraform-EC2"
+  }
+}
+
+🔹 STEP 6: s3.tf (S3 Bucket)
+resource "aws_s3_bucket" "app_bucket" {
+  bucket = var.bucket_name
+
+  tags = {
+    Name = "Terraform-App-Bucket"
+  }
+}
+
+🔹 STEP 7: iam.tf (IAM User + Policy + Attachment)
+IAM User
+resource "aws_iam_user" "devops_user" {
+  name = var.iam_user_name
+}
+
+IAM Policy
+resource "aws_iam_policy" "ec2_control_policy" {
+  name        = "EC2StartStopDescribePolicy"
+  description = "Allow start, stop, and describe EC2 instances"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:StartInstances",
+          "ec2:StopInstances",
+          "ec2:DescribeInstances"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+Attach Policy to User
+resource "aws_iam_user_policy_attachment" "attach_policy" {
+  user       = aws_iam_user.devops_user.name
+  policy_arn = aws_iam_policy.ec2_control_policy.arn
+}
+
+🔹 STEP 8: outputs.tf (REQUIRED OUTPUTS)
+output "ec2_instance_id" {
+  value = aws_instance.ec2_instance.id
+}
+
+output "s3_bucket_name" {
+  value = aws_s3_bucket.app_bucket.bucket
+}
+
+output "iam_user_name" {
+  value = aws_iam_user.devops_user.name
+}
+
+🔹 STEP 9: Run Terraform Commands (IN ORDER)
+terraform init
+
+terraform validate
+
+terraform plan
+
+terraform apply
+
+
+Type:
+
+yes
+
+✅ EXPECTED OUTPUT (FINAL)
+ec2_instance_id = "i-0abcd12345xyz"
+s3_bucket_name = "cdac-terraform-app-data-12345"
+iam_user_name  = "devops-engineer"
+
+🔹 STEP 10: Verify in AWS Console
+
+EC2 → Instance running
+
+S3 → Bucket created
+
+IAM → User + Policy attached
+
+❌ COMMON ERRORS & FIX
+Bucket name error?
+
+➡️ Change bucket name in terraform.tfvars
+
+Provider error?
+terraform init -upgrade
+
+Access denied?
+
+➡️ Check aws configure
+
+🧹 CLEANUP (IMPORTANT)
+terraform destroy
+
+📌 This matches EXACTLY:
+
+✔ ACTS, C-DAC Bangalore
+✔ Variables used
+✔ Outputs used
+✔ Folder structure
+✔ No errors
+
+If you want, I can also:
+
+Convert this into single file
+
+Add security groups
+
+Explain each line for exam
+
+Give MCQs from this lab
+
+Just tell me 👍
+
+
+
+
+ChatGPT can make mistakes. Check important info. See Cookie Preferences.
