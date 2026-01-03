@@ -18,3 +18,15 @@ int main() {
     return 0;
 }
 c program
+
+
+mkdir hello
+cd hello
+nano hi.c
+ls
+docker image
+nano Dockerfile
+docker build -t c-app .
+docker run -t c-app
+docker tag c-app oyst12/c-app:latest
+docker push oyst12/c-app:latest
