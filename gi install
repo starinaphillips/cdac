@@ -1,0 +1,118 @@
+✅ GIT & GITHUB – COMPLETE WORKING COMMANDS
+🔹 STEP 1: Install Git (Ubuntu)
+sudo apt update
+sudo apt install git -y
+
+
+Verify:
+
+git --version
+
+🔹 STEP 2: Configure Git (ONE TIME)
+git config --global user.name "YourGitHubUsername"
+git config --global user.email "yourmail@gmail.com"
+
+
+Check:
+
+git config --list
+
+🔹 STEP 3: Create Project Folder & Initialize Git
+mkdir myproject
+cd myproject
+git init
+
+
+✔ Git repository initialized
+
+🔹 STEP 4: Create a File & Check Status
+echo "This is my first file" > testfile.txt
+ls
+git status
+
+🔹 STEP 5: Add File to Staging Area
+git add testfile.txt
+
+
+or add all files:
+
+git add .
+
+🔹 STEP 6: Commit Changes
+git commit -m "Added testfile"
+
+🔹 STEP 7: Create GitHub Repository
+
+Go to GitHub
+
+Click New Repository
+
+Copy repository URL
+Example:
+
+https://github.com/username/myproject.git
+
+🔹 STEP 8: Connect Local Repo to GitHub
+git remote add origin https://github.com/username/myproject.git
+
+
+Verify:
+
+git remote -v
+
+🔹 STEP 9: Push Code to GitHub (MAIN BRANCH)
+git branch -M main
+git push -u origin main
+
+✅ BRANCHING (VERY IMPORTANT FOR EXAM)
+🔹 STEP 10: Create New Branch
+git checkout -b mybranch
+
+🔹 STEP 11: Add File in New Branch
+echo "This is second file" > secondfile.txt
+git add .
+git commit -m "Added second file in mybranch"
+git push -u origin mybranch
+
+🔹 STEP 12: Merge Branch into Main
+git checkout main
+git merge mybranch
+git push
+
+✅ FOLDER & MULTIPLE FILES (From your notes)
+mkdir notes syllabus
+touch notes/readme.txt syllabus/readme.txt
+git add .
+git commit -m "Added notes and syllabus folders"
+git push
+
+✅ IMPORTANT GIT COMMANDS (EXAM READY)
+Purpose	Command
+Check status	git status
+View branches	git branch
+Switch branch	git checkout branchname
+Create branch	git checkout -b branchname
+Merge branch	git merge branchname
+Push code	git push
+Pull code	git pull
+✅ DOCKER (FROM YOUR NOTES)
+Push Image
+docker push dockerhub_username/image_name
+
+Pull Image
+docker pull dockerhub_username/image_name
+
+🎯 THIS IS PERFECT FOR:
+
+✔ Lab exams
+✔ Viva
+✔ ACTS / C-DAC Bangalore
+✔ Real DevOps workflow
+
+If you want next:
+
+❓ Git MCQs
+
+🧪 Git Lab questions
+
+🧱 Git + Jenkins pipeline
